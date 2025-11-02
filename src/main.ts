@@ -10,13 +10,16 @@ import { MailService } from './mail/mail.service';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
+  // Middleware
   app.use(cookieParser());
 
+  // CORS - Adaptable pour production
   app.enableCors({
-    origin: 'http://localhost:3000',
+    origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
     credentials: true,
   });
 
+  // Handlebars Configuration
   const hbsEngine = create({
     extname: '.hbs',
     defaultLayout: 'main',
@@ -62,17 +65,36 @@ async function bootstrap() {
       },
     },
   });
+
+  // Global Pipes
   app.useGlobalPipes(new ValidationPipe());
 
+  // Static Assets & Views
   app.useStaticAssets(join(__dirname, '..', 'public'));
-
   app.engine('hbs', hbsEngine.engine);
   app.setViewEngine('hbs');
   app.setBaseViewsDir(join(__dirname, '..', 'views'));
 
-  const mailService = app.get(MailService);
-  const isConnected = await mailService.testConnection();
+  // Optional: Test Mail Connection (comment if issues in prod)
+  try {
+    const mailService = app.get(MailService);
+    const isConnected = await mailService.testConnection();
+    if (isConnected) {
+      console.log('✅ Mail service connected');
+    }
+  } catch (error) {
+    console.warn('⚠️ Mail service not available:', error.message);
+  }
 
-  await app.listen(process.env.PORT ?? 3000);
+  // Start Server
+  const port = process.env.PORT ?? 3000;
+  await app.listen(port, '0.0.0.0'); // 0.0.0.0 important pour Vercel
+
+  const envMode = process.env.NODE_ENV || 'development';
+  console.log(`🚀 Application is running on port ${port} [${envMode}]`);
 }
-bootstrap();
+
+bootstrap().catch((error) => {
+  console.error('❌ Failed to bootstrap application:', error);
+  process.exit(1);
+});
