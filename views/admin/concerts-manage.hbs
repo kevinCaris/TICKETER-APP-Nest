@@ -1,0 +1,424 @@
+<style>
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 100;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0,0,0,0.5);
+    }
+
+    .modal.show {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .concert-card {
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .concert-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+    }
+
+    .concert-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #f59e0b, #ef4444, #ec4899);
+    }
+</style>
+
+<!-- Top Bar -->
+<header class="bg-white shadow-sm sticky top-0 z-10">
+    <div class="flex items-center justify-between px-4 md:px-8 py-4">
+        <button onclick="toggleSidebar()" class="md:hidden text-gray-700 hover:text-gray-900 mr-4">
+            <i class="fas fa-bars text-2xl"></i>
+        </button>
+        <div>
+            <h2 class="text-2xl font-bold text-gray-800">Gestion des concerts</h2>
+            <p class="text-gray-600 text-sm">Gérer et planifier les événements de concert</p>
+        </div>
+        <button onclick="openModal('createModal')" class="bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700 text-white px-6 py-3 rounded-lg font-medium shadow-lg">
+            <i class="fas fa-plus mr-2"></i>Créer un concert
+        </button>
+    </div>
+</header>
+
+<!-- Content -->
+<div class="p-4 md:p-8">
+    <!-- Concerts Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+        {{#if concerts.length}}
+            {{#each concerts}}
+                <div class="concert-card bg-white rounded-xl shadow-md overflow-hidden">
+                    <div class="flex">
+                        <div class="w-48 h-48 flex-shrink-0">
+                            <img src="{{this.image}}" alt="{{this.title}}" class="w-full h-full object-cover">
+                        </div>
+                        <div class="flex-1 p-6">
+                            <div class="flex items-start justify-between mb-3">
+                                <div>
+                                    <h3 class="text-xl font-bold text-gray-800 mb-1">{{this.title}}</h3>
+                                    {{!-- <p class="text-sm text-gray-600 flex items-center">
+                                        <i class="fas fa-user text-pink-600 mr-2"></i>
+                                        {{this.group.name}}
+                                    </p> --}}
+                                </div>
+                                {{#if this.status}}
+                                    <span class="px-3 py-1 text-xs font-semibold text-green-800 bg-green-100 rounded-full">Active</span>
+                                {{else}}
+                                    <span class="px-3 py-1 text-xs font-semibold text-red-800 bg-red-100 rounded-full">Inactive</span>
+                                {{/if}}
+                            </div>
+                            <div class="space-y-2 mb-4">
+                                <div class="flex items-center text-sm text-gray-600">
+                                    <i class="fas fa-calendar w-5 text-pink-600"></i>
+                                    <span>{{formatDate this.date}} - {{this.hour}}</span>
+                                </div>
+                                <div class="flex items-center text-sm text-gray-600">
+                                    <i class="fas fa-map-marker-alt w-5 text-pink-600"></i>
+                                    <span>{{this.location}}</span>
+                                </div>
+                                <div class="flex items-center text-sm text-gray-600">
+                                    <i class="fas fa-ticket-alt w-5 text-pink-600"></i>
+                                    <span>{{this.availableSeats}} / {{this.totalSeats}} place</span>
+                                </div>
+                                <div class="flex items-center text-sm font-semibold text-gray-800">
+                                    <i class="fas fa-dollar-sign w-5 text-pink-600"></i>
+                                    <span>${{this.price}}</span>
+                                </div>
+                            </div>
+                            <div class="flex space-x-2">
+                                <button onclick="openEditModal('{{this._id}}')" class="flex-1 bg-pink-100 text-pink-700 hover:bg-pink-200 px-3 py-2 rounded-lg text-sm font-medium transition">
+                                    <i class="fas fa-edit mr-1"></i>Edit
+                                </button>
+                                <button onclick="deleteConcert('{{this._id}}', '{{this.title}}')" class="flex-1 bg-red-100 text-red-700 hover:bg-red-200 px-3 py-2 rounded-lg text-sm font-medium transition">
+                                    <i class="fas fa-trash mr-1"></i>Delete
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {{/each}}
+        {{else}}
+            <div class="col-span-2 text-center py-20 bg-white rounded-xl">
+                <i class="fas fa-music text-6xl text-gray-300 mb-4"></i>
+                <p class="text-gray-600 text-xl mb-6">No concerts yet</p>
+                <button onclick="openModal('createModal')" class="bg-pink-600 text-white px-8 py-3 rounded-lg font-medium">
+                    Créer votre premier concert
+                </button>
+            </div>
+        {{/if}}
+    </div>
+</div>
+
+<!-- Create Concert Modal -->
+<div id="createModal" class="modal">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-3xl p-8 m-4 max-h-[90vh] overflow-y-auto">
+        <div class="flex items-center justify-between mb-6">
+            <h3 class="text-2xl font-bold text-gray-800">Céer un nouveau concert</h3>
+            <button onclick="closeModal('createModal')" class="text-gray-400 hover:text-gray-600">
+                <i class="fas fa-times text-2xl"></i>
+            </button>
+        </div>
+        <form id="createForm" class="space-y-4" onsubmit="createConcert(event)">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Titre de concert *</label>
+                <input type="text" name="title" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-600" placeholder="e.g., The Eras Tour">
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Description *</label>
+                <textarea name="description" required rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-600" placeholder="Concert description..."></textarea>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Genre *</label>
+                    <input type="text" name="genre" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-600" placeholder="e.g., Pop">
+                </div>
+<div>
+    <label class="block text-sm font-medium text-gray-700 mb-2">Groupe *</label>
+    <select name="group" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-600">
+        <option value="">Sélectionner un groupe</option>
+        {{#each groups}}
+            <option value="{{this.id}}">{{this.name}} - {{this.genre}}</option>
+        {{/each}}
+    </select>
+</div>            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Date *</label>
+                    <input type="date" name="date" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-600">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Heure *</label>
+                    <input type="time" name="hour" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-600">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Lieu *</label>
+                <input type="text" name="location" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-600" placeholder="e.g., Wembley Stadium, London">
+            </div>
+
+            <div class="grid grid-cols-3 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">place *</label>
+                    <input type="number" name="totalSeats" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-600" placeholder="3000">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Place disponible *</label>
+                    <input type="number" name="availableSeats" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-600" placeholder="3000">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Prix ($) *</label>
+                    <input type="number" name="price" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-600" placeholder="150">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Concert Image URL *</label>
+                <input type="url" name="image" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-600" placeholder="https://example.com/concert-image.jpg">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                <select name="status" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-600">
+                    <option value="true">Active</option>
+                    <option value="false">Inactive</option>
+                </select>
+            </div>
+
+            <div class="flex space-x-4 pt-4">
+                <button type="submit" class="flex-1 bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700 text-white px-6 py-3 rounded-lg font-medium">
+                    Créer Concert
+                </button>
+                <button type="button" onclick="closeModal('createModal')" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-3 rounded-lg font-medium">
+                    Annulé
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Edit Concert Modal -->
+<div id="editModal" class="modal">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-3xl p-8 m-4 max-h-[90vh] overflow-y-auto">
+        <div class="flex items-center justify-between mb-6">
+            <h3 class="text-2xl font-bold text-gray-800">Edit Concert</h3>
+            <button onclick="closeModal('editModal')" class="text-gray-400 hover:text-gray-600">
+                <i class="fas fa-times text-2xl"></i>
+            </button>
+        </div>
+        <form id="editForm" class="space-y-4" onsubmit="updateConcert(event)">
+            <input type="hidden" name="id" id="edit-id">
+            
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Titre de concert *</label>
+                <input type="text" name="title" id="edit-title" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-600">
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Description *</label>
+                <textarea name="description" id="edit-description" required rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-600"></textarea>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Genre *</label>
+                    <input type="text" name="genre" id="edit-genre" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-600">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Groupe ID *</label>
+                    <input type="text" name="group" id="edit-group" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-600">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Date *</label>
+                    <input type="date" name="date" id="edit-date" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-600">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Heure *</label>
+                    <input type="time" name="hour" id="edit-hour" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-600">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Lieu *</label>
+                <input type="text" name="location" id="edit-location" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-600">
+            </div>
+
+            <div class="grid grid-cols-3 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Total de place *</label>
+                    <input type="number" name="totalSeats" id="edit-totalSeats" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-600">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Place disponible *</label>
+                    <input type="number" name="availableSeats" id="edit-availableSeats" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-600">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Prix ($) *</label>
+                    <input type="number" name="price" id="edit-price" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-600">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Concert Image URL *</label>
+                <input type="url" name="image" id="edit-image" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-600">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                <select name="status" id="edit-status" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-600">
+                    <option value="true">Active</option>
+                    <option value="false">Inactive</option>
+                </select>
+            </div>
+
+            <div class="flex space-x-4 pt-4">
+                <button type="submit" class="flex-1 bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700 text-white px-6 py-3 rounded-lg font-medium">
+                    Sauvegarder
+                </button>
+                <button type="button" onclick="closeModal('editModal')" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-3 rounded-lg font-medium">
+                    Annuler
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function openModal(modalId) {
+        document.getElementById(modalId).classList.add('show');
+    }
+
+    function closeModal(modalId) {
+        document.getElementById(modalId).classList.remove('show');
+    }
+
+    async function createConcert(event) {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        const data = Object.fromEntries(formData);
+        data.status = data.status === 'true';
+        data.totalSeats = parseInt(data.totalSeats);
+        data.availableSeats = parseInt(data.availableSeats);
+        data.price = parseFloat(data.price);
+
+        try {
+            const response = await fetch('/concerts', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data),
+                credentials: 'include'
+            });
+
+            if (response.ok) {
+                alert('Concert created successfully!');
+                window.location.reload();
+            } else {
+                alert('Error creating concert');
+            }
+        } catch (error) {
+            alert('Network error');
+        }
+    }
+
+    async function openEditModal(id) {
+        try {
+            const response = await fetch(`/concerts/${id}`);
+            const concert = await response.json();
+
+            document.getElementById('edit-id').value = concert._id;
+            document.getElementById('edit-title').value = concert.title;
+            document.getElementById('edit-description').value = concert.description;
+            document.getElementById('edit-genre').value = concert.genre;
+            document.getElementById('edit-group').value = concert.group;
+            document.getElementById('edit-date').value = concert.date.split('T')[0];
+            document.getElementById('edit-hour').value = concert.hour;
+            document.getElementById('edit-location').value = concert.location;
+            document.getElementById('edit-totalSeats').value = concert.totalSeats;
+            document.getElementById('edit-availableSeats').value = concert.availableSeats;
+            document.getElementById('edit-price').value = concert.price;
+            document.getElementById('edit-image').value = concert.image;
+            document.getElementById('edit-status').value = concert.status.toString();
+
+            openModal('editModal');
+        } catch (error) {
+            alert('Error loading concert data');
+        }
+    }
+
+    async function updateConcert(event) {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        const data = Object.fromEntries(formData);
+        const id = data.id;
+        delete data.id;
+        
+        data.status = data.status === 'true';
+        data.totalSeats = parseInt(data.totalSeats);
+        data.availableSeats = parseInt(data.availableSeats);
+        data.price = parseFloat(data.price);
+
+        try {
+            const response = await fetch(`/concerts/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data),
+                credentials: 'include'
+            });
+
+            if (response.ok) {
+                alert('Concert updated successfully!');
+                window.location.reload();
+            } else {
+                alert('Error updating concert');
+            }
+        } catch (error) {
+            alert('Network error');
+        }
+    }
+
+    async function deleteConcert(id, title) {
+        if (confirm(`Are you sure you want to delete "${title}"?`)) {
+            try {
+                const response = await fetch(`/concerts/${id}`, {
+                    method: 'DELETE',
+                    credentials: 'include'
+                });
+
+                if (response.ok) {
+                    alert('Concert deleted successfully!');
+                    window.location.reload();
+                } else {
+                    alert('Error deleting concert');
+                }
+            } catch (error) {
+                alert('Network error');
+            }
+        }
+    }
+
+    window.onclick = function(event) {
+        if (event.target.classList.contains('modal')) {
+            event.target.classList.remove('show');
+        }
+    }
+</script>

@@ -1,0 +1,250 @@
+
+<!-- Main Content -->
+<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-6xl w-full bg-white rounded-2xl shadow-2xl overflow-hidden flex">
+        <!-- Left Side - Form -->
+        <div class="w-full lg:w-1/2 p-12">
+            <div class="max-w-md mx-auto">
+                <!-- Error Message -->
+                <div id="errorAlert" class="hidden mb-6 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+                    <p id="errorMessage"></p>
+                </div>
+
+                <!-- Success Message -->
+                <div id="successAlert" class="hidden mb-6 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg">
+                    <p>Account created successfully! Redirecting to login...</p>
+                </div>
+
+                <h2 class="text-3xl font-bold mb-8">Create Account</h2>
+
+                <!-- Google Sign In -->
+                <button type="button" class="w-full border-2 border-gray-300 hover:border-gray-400 text-gray-700 py-3 rounded-lg font-medium mb-6 flex items-center justify-center space-x-2 transition duration-200">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                    </svg>
+                    <span>Sign up with Google</span>
+                </button>
+
+                <!-- Divider -->
+                <div class="relative mb-6">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-gray-300"></div>
+                    </div>
+                    <div class="relative flex justify-center text-sm">
+                        <span class="px-2 bg-white text-gray-500">or</span>
+                    </div>
+                </div>
+
+                <form id="registerForm">
+                    <!-- Username Input -->
+                    <div class="mb-6">
+                        <label class="block text-gray-700 font-medium mb-2">Username</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <i class="fas fa-user text-gray-400"></i>
+                            </div>
+                            <input
+                                id="username"
+                                name="username"
+                                type="text"
+                                placeholder="Choose a username"
+                                required
+                                class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-transparent"
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Email Input -->
+                    <div class="mb-6">
+                        <label class="block text-gray-700 font-medium mb-2">Email</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <i class="fas fa-envelope text-gray-400"></i>
+                            </div>
+                            <input
+                                id="email"
+                                name="email"
+                                type="email"
+                                placeholder="Enter your email"
+                                required
+                                class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-transparent"
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Password Input -->
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-medium mb-2">Password</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <i class="fas fa-lock text-gray-400"></i>
+                            </div>
+                            <input
+                                id="password"
+                                name="password"
+                                type="password"
+                                placeholder="Create a password"
+                                required
+                                class="w-full pl-12 pr-10 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-transparent"
+                            >
+                            <button type="button" class="absolute inset-y-0 right-0 pr-4 flex items-center" onclick="togglePasswordReg('password')">
+                                <i id="toggleIcon1" class="fas fa-eye-slash text-gray-400 hover:text-gray-600"></i>
+                            </button>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">Must be at least 8 characters.</p>
+                    </div>
+
+                    <!-- Confirm Password Input -->
+                    <div class="mb-6">
+                        <label class="block text-gray-700 font-medium mb-2">Confirm Password</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <i class="fas fa-lock text-gray-400"></i>
+                            </div>
+                            <input
+                                id="confirmPassword"
+                                name="confirmPassword"
+                                type="password"
+                                placeholder="Confirm your password"
+                                required
+                                class="w-full pl-12 pr-10 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-transparent"
+                            >
+                            <button type="button" class="absolute inset-y-0 right-0 pr-4 flex items-center" onclick="togglePasswordReg('confirmPassword')">
+                                <i id="toggleIcon2" class="fas fa-eye-slash text-gray-400 hover:text-gray-600"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Create Account Button -->
+                    <button type="submit" id="registerBtn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-semibold mb-6 transition duration-200 flex items-center justify-center">
+                        <span id="btnText">Create an account</span>
+                        <i id="btnLoader" class="fas fa-spinner fa-spin ml-2 hidden"></i>
+                    </button>
+                </form>
+
+                <!-- Log In Link -->
+                <p class="text-center text-gray-600">
+                    Already have an account?
+                    <a href="/login" class="text-gray-900 font-semibold hover:text-indigo-600">Log In</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- Right Side - Image -->
+        <div class="hidden lg:block lg:w-1/2 relative" style="background-image: url('https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=800'); background-size: cover; background-position: center;">
+            <div class="absolute inset-0" style="background: linear-gradient(135deg, rgba(79, 70, 229, 0.9) 0%, rgba(79, 70, 229, 0.7) 100%);">
+                <div class="flex flex-col items-center justify-center h-full text-white p-12">
+                    <h1 class="text-5xl font-bold mb-4">Welcome Here</h1>
+                    <p class="text-xl text-center">Create an account to make reservations</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function togglePasswordReg(fieldId) {
+        const input = document.getElementById(fieldId);
+        const iconId = fieldId === 'password' ? 'toggleIcon1' : 'toggleIcon2';
+        const icon = document.getElementById(iconId);
+        
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        } else {
+            input.type = 'password';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        }
+    }
+
+    function showError(message) {
+        const errorAlert = document.getElementById('errorAlert');
+        const errorMessage = document.getElementById('errorMessage');
+        errorMessage.textContent = message;
+        errorAlert.classList.remove('hidden');
+        setTimeout(() => errorAlert.classList.add('hidden'), 5000);
+    }
+
+    function showSuccess() {
+        const successAlert = document.getElementById('successAlert');
+        successAlert.classList.remove('hidden');
+    }
+
+    document.getElementById('registerForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const username = document.getElementById('username').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        const registerBtn = document.getElementById('registerBtn');
+        const btnText = document.getElementById('btnText');
+        const btnLoader = document.getElementById('btnLoader');
+
+        // Validation
+        if (!username || !email || !password || !confirmPassword) {
+            showError('Veuillez remplir tous les champs');
+            return;
+        }
+
+        if (username.length < 3) {
+            showError('Le nom d\'utilisateur doit contenir au moins 3 caractères');
+            return;
+        }
+
+        if (!email.includes('@')) {
+            showError('Veuillez entrer une adresse email valide');
+            return;
+        }
+
+        if (password.length < 8) {
+            showError('Le mot de passe doit contenir au moins 8 caractères');
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            showError('Les mots de passe ne correspondent pas');
+            return;
+        }
+
+        // Désactiver le bouton et afficher le loader
+        registerBtn.disabled = true;
+        btnText.textContent = 'Creating account...';
+        btnLoader.classList.remove('hidden');
+
+        try {
+            const response = await fetch('/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: username,
+                    email: email,
+                    password: password,
+                }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Erreur d\'enregistrement');
+            }
+
+            showSuccess();
+            
+            window.location.href = 'login';
+
+        } catch (error) {
+            showError(error.message || 'Une erreur est survenue');
+            registerBtn.disabled = false;
+            btnText.textContent = 'Create an account';
+            btnLoader.classList.add('hidden');
+        }
+    });
+</script>

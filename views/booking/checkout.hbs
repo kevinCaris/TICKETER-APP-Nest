@@ -1,0 +1,155 @@
+<div class="max-w-7xl mx-auto px-4 py-8">
+    
+    <div class="flex items-center justify-between mb-8 max-w-4xl mx-auto">
+        <div class="flex items-center">
+            <div class="w-10 h-10 bg-indigo-600 text-white rounded-full flex items-center justify-center">✓</div>
+            <span class="ml-2 text-sm font-medium">Choisir l'heure</span>
+        </div>
+        <div class="flex-1 h-0.5 bg-indigo-600 mx-4"></div>
+
+        <div class="flex items-center">
+            <div class="w-10 h-10 bg-indigo-600 text-white rounded-full flex items-center justify-center">✓</div>
+            <span class="ml-2 text-sm font-medium">Choisir les places</span>
+        </div>
+        <div class="flex-1 h-0.5 bg-indigo-600 mx-4"></div>
+
+        <div class="flex items-center">
+            <div class="w-10 h-10 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold">3
+            </div>
+            <span class="ml-2 text-sm font-medium">Paiement</span>
+        </div>
+        <div class="flex-1 h-0.5 bg-gray-300 mx-4"></div>
+
+        <div class="flex items-center">
+            <div class="w-10 h-10 bg-gray-300 text-gray-600 rounded-full flex items-center justify-center">4</div>
+            <span class="ml-2 text-sm text-gray-500">Obtenir le billet</span>
+        </div>
+    </div>
+
+    <h2 class="text-2xl font-bold text-center mb-2">Paiement</h2>
+    <p class="text-center text-gray-600 mb-6">Remplissez les informations nécessaires ici.</p>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+        
+        <div>
+            <h3 class="text-xl font-bold mb-4">Votre liste de billets</h3>
+
+            {{#each bookings}}
+            <div class="bg-white rounded-lg p-4 shadow-sm border mb-4 flex gap-4">
+                <img src="{{concertId.image}}" alt="{{concertId.title}}" class="w-24 h-24 object-cover rounded">
+                <div class="flex-1">
+                    <h4 class="font-bold">{{concertId.title}}</h4>
+                    <p class="text-sm text-gray-600">{{formatdate concertId.date}} · Billet VIP</p>
+                    <p class="text-sm text-gray-600">Section 1, Rangée D, Siège 105</p>
+                    <p class="font-bold mt-2">{{concertId.price}}€</p>
+                </div>
+            </div>
+            {{/each}}
+
+            <div class="bg-white rounded-lg p-4 shadow-sm border mt-4">
+                <div class="flex justify-between mb-2">
+                    <span class="text-gray-600">Sous-total</span>
+                    <span class="font-medium">{{subtotal}}€</span>
+                </div>
+                <div class="flex justify-between pb-3 border-b">
+                    <span class="text-gray-600">Frais de service</span>
+                    <span class="font-medium">{{serviceFees}}€</span>
+                </div>
+                <div class="flex justify-between text-lg font-bold mt-3">
+                    <span>Total USD ({{quantity}} articles)</span>
+                    <span>{{total}}€</span>
+                </div>
+            </div>
+        </div>
+
+        
+        <div>
+            <h3 class="text-xl font-bold mb-4">Détails du paiement</h3>
+
+            <form id="paymentForm" class="bg-white rounded-lg p-6 shadow-sm border">
+                
+                <div class="mb-6">
+                    <div class="flex gap-4 mb-4">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="radio" name="paymentMethod" value="paypal" class="w-4 h-4">
+                            <i class="fab fa-stripe"></i>
+                            <span>Stripe</span>
+                        </label>
+
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="radio" name="paymentMethod" value="card" checked class="w-4 h-4">
+                            <i class="fas fa-credit-card text-2xl text-orange-500"></i>
+                            <span>Carte bancaire</span>
+                        </label>
+
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="radio" name="paymentMethod" value="venmo" class="w-4 h-4">
+                            <i class="fab fa-cc-visa text-2xl text-blue-700"></i>
+                            <span>Paypal</span>
+                        </label>
+                    </div>
+                </div>
+
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">Numéro de carte</label>
+                    <input type="text" placeholder="xxxx xxxx xxxx xxxx"
+                        class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-600">
+                </div>
+
+                
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Date d'expiration</label>
+                        <input type="text" placeholder="MM/YY"
+                            class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-600">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">CVV</label>
+                        <input type="text" placeholder="xxx"
+                            class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-600">
+                    </div>
+                </div>
+
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">Nom sur la carte</label>
+                    <input type="text" placeholder="Entrez votre nom"
+                        class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-600">
+                </div>
+
+                
+                <div class="mb-6">
+                    <label class="block text-sm font-medium mb-2">Code promo</label>
+                    <input type="text" placeholder="Entrez le code promo"
+                        class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-600">
+                </div>
+
+                
+                <div class="mb-6">
+                    <label class="flex items-start gap-2">
+                        <input type="checkbox" required class="mt-1">
+                        <span class="text-sm">
+                            En cliquant sur ceci, j'accepte la
+                            <a href="#" class="text-indigo-600 hover:underline">Politique de confidentialité</a> de
+                            Ticketer
+                        </span>
+                    </label>
+                </div>
+
+                
+                <button type="submit"
+                    class="w-full bg-indigo-600 text-white py-3 rounded-lg font-medium hover:bg-indigo-700">
+                    Payer {{total}}€
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('paymentForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        window.location.href = '/bookings/success';
+    });
+</script>

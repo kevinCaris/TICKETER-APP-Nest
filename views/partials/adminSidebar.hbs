@@ -1,0 +1,124 @@
+<!-- Sidebar -->
+<aside id="sidebar" class="w-64 bg-gradient-to-b from-gray-900 to-gray-800 text-white flex flex-col fixed h-full z-50 md:translate-x-0">
+  <!-- Logo -->
+  <div class="p-6 border-b border-gray-700">
+    <div class="flex items-center space-x-2">
+      <i class="fas fa-shield-halved text-3xl text-indigo-400"></i>
+      <div>
+        <h1 class="text-xl font-bold">ADMIN</h1>
+        <p class="text-xs text-gray-400">TICKETER Panel</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="flex-1 px-4 py-6 overflow-y-auto">
+    <div class="space-y-2">
+      <a href="/admin" class="sidebar-link flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-700 transition">
+        <i class="fas fa-home w-5"></i>
+        <span class="font-medium">Dashboard</span>
+      </a>
+
+      <a href="/users/accounts" class="sidebar-link flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-700 transition">
+        <i class="fas fa-users w-5"></i>
+        <span class="font-medium">Accounts</span>
+      </a>
+
+      <a href="/groups/admin" class="sidebar-link flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-700 transition">
+        <i class="fas fa-user-group w-5"></i>
+        <span class="font-medium">Groups</span>
+      </a>
+
+      <a href="/concerts/admin/manage" class="sidebar-link flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-700 transition">
+        <i class="fas fa-music w-5"></i>
+        <span class="font-medium">Concerts</span>
+      </a>
+
+      
+    </div>
+
+    <div class="mt-8 pt-8 border-t border-gray-700">
+      <a href="/" class="sidebar-link flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-700 transition">
+        <i class="fas fa-arrow-left w-5"></i>
+        <span class="font-medium">Back to Site</span>
+      </a>
+
+      <button id="btnadmin" class="w-full sidebar-link flex items-center space-x-3 px-4 py-3 rounded-lg text-red-400 hover:bg-red-900/20 transition">
+        <i class="fas fa-sign-out-alt w-5"></i>
+        <span class="font-medium">Logout</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- User Info -->
+  <div class="p-4 border-t border-gray-700">
+    <div class="flex items-center space-x-3">
+      <div id="adminAvatar" class="w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center font-bold">A</div>
+      <div>
+        <p id="adminName" class="font-semibold text-sm">Admin User</p>
+        <p id="adminEmail" class="text-xs text-gray-400">admin@ticketer.com</p>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<script>
+  async function logout() {
+    try {
+      const response = await fetch('/logout', {
+        method: 'POST',
+        credentials: 'include',
+      });
+
+      if (!response.ok) throw new Error('Erreur déconnexion');
+
+      // Nettoyer le localStorage
+      localStorage.removeItem('user');
+      localStorage.removeItem('email');
+
+      window.location.href = '/login';
+    } catch (error) {
+      alert('Erreur lors de la déconnexion: ' + error.message);
+    }
+  }
+
+  // Récupérer les infos de l'utilisateur
+  async function loadAdminInfo() {
+    try {
+      const response = await fetch('/auth/check', {
+        credentials: 'include'
+      });
+
+      if (!response.ok) {
+        window.location.href = '/login';
+        return;
+      }
+
+      const data = await response.json();
+      if (data.user) {
+        const user = data.user;
+        
+        // Afficher initiales dans avatar
+        const initials = (user.username || user.name || 'A')
+          .split(' ')
+          .map(p => p[0])
+          .join('')
+          .toUpperCase()
+          .substring(0, 2);
+        
+        document.getElementById('adminAvatar').textContent = initials;
+        document.getElementById('adminName').textContent = user.username || user.name || 'Admin User';
+        document.getElementById('adminEmail').textContent = user.email || 'admin@ticketer.com';
+      }
+    } catch (error) {
+      console.error('Erreur chargement user:', error);
+      window.location.href = '/login';
+    }
+  }
+
+  // Initialiser
+  document.addEventListener('DOMContentLoaded', () => {
+    loadAdminInfo();
+    document.getElementById('btnadmin').addEventListener('click', logout);
+  });
+</script>

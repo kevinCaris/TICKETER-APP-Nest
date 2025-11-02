@@ -1,0 +1,286 @@
+<header class="bg-white shadow-sm sticky top-0 z-10">
+  <div class="flex items-center justify-between px-4 md:px-8 py-4">
+    <!-- Mobile Menu Button -->
+    <button onclick="toggleSidebar()" class="md:hidden text-gray-700 hover:text-gray-900 mr-4">
+      <i class="fas fa-bars text-2xl"></i>
+    </button>
+    <div>
+      <h2 class="text-2xl font-bold text-gray-800">Account Management</h2>
+      <p class="text-gray-600 text-sm">Manage user accounts and permissions</p>
+    </div>
+    <button onclick="openCreateModal()" class="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-6 py-3 rounded-lg font-medium shadow-lg">
+      <i class="fas fa-plus mr-2"></i>Create Account
+    </button>
+  </div>
+</header>
+
+<div class="p-4 md:p-8">
+  <!-- Filters -->
+  <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+      <div class="relative">
+        <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+        <input type="text" placeholder="Search by name or email..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600">
+      </div>
+      <select class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600">
+        <option>All Roles</option>
+        <option>Admin</option>
+        <option>User</option>
+      </select>
+      <select class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600">
+        <option>All Status</option>
+        <option>Active</option>
+        <option>Inactive</option>
+      </select>
+      <button class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-medium">
+        <i class="fas fa-filter mr-2"></i>Apply Filters
+      </button>
+    </div>
+  </div>
+
+  <!-- Accounts Table -->
+  <div class="bg-white rounded-xl shadow-md overflow-hidden">
+    <div class="overflow-x-auto -mx-4 md:mx-0">
+      <table class="w-full min-w-[640px]">
+        <thead class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
+          <tr>
+            <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Utilisateur</th>
+            <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Email</th>
+            <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Role</th>
+            <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Joined</th>
+            <th class="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+          {{#if data}}
+            {{#each data}}
+            <tr class="hover:bg-gray-50 transition">
+              <td class="px-6 py-4">
+                <div class="flex items-center space-x-3">
+                  <div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-semibold">
+                    {{this.name.[0]}}
+                  </div>
+                  <div>
+                    <p class="font-semibold text-gray-800">{{this.name}}</p>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-600">{{this.email}}</td>
+              <td class="px-6 py-4">
+                <span class="px-3 py-1 text-xs font-semibold text-blue-800 bg-blue-100 rounded-full">
+                  {{#if this.isAdmin}}Administrateur{{else}}Utilisateur{{/if}}
+                </span>
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-600">{{this.createAt}}</td>
+              <td class="px-6 py-4">
+                <div class="flex items-center justify-center space-x-2">
+                  {{#if this.isAdmin}}
+                    <button onclick="demoteUser('{{this.id}}')" class="action-btn w-8 h-8 bg-yellow-100 text-yellow-600 rounded-lg hover:bg-yellow-200" title="Demote to User">
+                      <i class="fas fa-user-slash"></i>
+                    </button>
+                  {{else}}
+                    <button onclick="promoteUser('{{this.id}}')" class="action-btn w-8 h-8 bg-green-100 text-green-600 rounded-lg hover:bg-green-200" title="Promote to Admin">
+                      <i class="fas fa-user-shield"></i>
+                    </button>
+                  {{/if}}
+                  <button onclick="openEditModal({ id: '{{this.id}}', name: '{{this.name}}', email: '{{this.email}}', isAdmin: {{this.isAdmin}} })" class="action-btn w-8 h-8 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200" title="Edit">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button onclick="deleteAccount('{{this.id}}')" class="action-btn w-8 h-8 bg-red-100 text-red-600 rounded-lg hover:bg-red-200" title="Delete">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            {{/each}}
+          {{else}}
+            <tr>
+              <td colspan="5" class="text-center py-6 text-gray-500">No accounts found.</td>
+            </tr>
+          {{/if}}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="bg-gray-50 px-6 py-4 border-t flex items-center justify-between">
+      <div class="text-sm text-gray-600">
+        Showing <span class="font-semibold">1</span> to <span class="font-semibold">4</span> of <span class="font-semibold">47</span> accounts
+      </div>
+      <div class="flex space-x-2">
+        <button class="px-3 py-1 bg-white border border-gray-300 rounded-lg text-sm hover:bg-gray-100">Previous</button>
+        <button class="px-3 py-1 bg-indigo-600 text-white rounded-lg text-sm">1</button>
+        <button class="px-3 py-1 bg-white border border-gray-300 rounded-lg text-sm hover:bg-gray-100">2</button>
+        <button class="px-3 py-1 bg-white border border-gray-300 rounded-lg text-sm hover:bg-gray-100">3</button>
+        <button class="px-3 py-1 bg-white border border-gray-300 rounded-lg text-sm hover:bg-gray-100">Next</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Unique pour Create / Edit -->
+<div id="accountModal" class="modal">
+  <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl p-8 m-4">
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="text-2xl font-bold text-gray-800" id="accountModalTitle">Create Account</h3>
+      <button onclick="closeModal('accountModal')" class="text-gray-400 hover:text-gray-600">
+        <i class="fas fa-times text-2xl"></i>
+      </button>
+    </div>
+    <form class="space-y-4">
+      <input type="hidden" name="userId" value="">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Nom utilisateur</label>
+        <input type="text" name="name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600">
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+        <input type="email" name="email" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600">
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Password <span id="passwordHint">(Only for new users)</span></label>
+        <input type="password" name="password" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600">
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Role</label>
+        <select name="role" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600">
+          <option value="User">Utilisateur</option>
+          <option value="Admin">Administrateur</option>
+        </select>
+      </div>
+      <div class="flex space-x-4 pt-4">
+        <button type="submit" class="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-6 py-3 rounded-lg font-medium">
+          Save
+        </button>
+        <button type="button" onclick="closeModal('accountModal')" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-3 rounded-lg font-medium">
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  function toggleSidebar() {
+    const sidebar = document.getElementById("sidebar");
+    const overlay = document.getElementById("sidebarOverlay");
+    sidebar.classList.toggle("show");
+    overlay.classList.toggle("show");
+  }
+
+  document.querySelectorAll("#sidebar a").forEach(link => {
+    link.addEventListener("click", () => {
+      if (window.innerWidth < 768) toggleSidebar();
+    });
+  });
+
+  function openCreateModal() {
+    const modal = document.getElementById('accountModal');
+    modal.classList.add('show');
+    document.getElementById('accountModalTitle').innerText = 'Create Account';
+    const form = modal.querySelector('form');
+    form.reset();
+    form.userId.value = '';
+    form.password.closest('div').style.display = 'block';
+  }
+
+  function openEditModal(user) {
+    const modal = document.getElementById('accountModal');
+    modal.classList.add('show');
+    document.getElementById('accountModalTitle').innerText = 'Edit Account';
+    const form = modal.querySelector('form');
+    form.userId.value = user.id;
+    form.name.value = user.name;
+    form.email.value = user.email;
+    form.role.value = user.isAdmin ? 'Admin' : 'User';
+    form.password.closest('div').style.display = 'none';
+  }
+
+  function closeModal(modalId) {
+    document.getElementById(modalId).classList.remove('show');
+  }
+
+  
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const form = document.querySelector('#accountModal form');
+
+   form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const userId = form.userId.value;
+      const name = form.name.value.trim();
+      const email = form.email.value.trim();
+      const role = form.role.value;
+      const password = form.password.value;
+
+      if (!name || !email || (!userId && !password)) {
+        alert('Veuillez remplir tous les champs requis.');
+        return;
+      }
+
+      const data = { username: name, email, isAdmin: role === 'Admin' };
+      if (!userId) data.password = password;
+
+      try {
+        const method = userId ? 'PATCH' : 'POST';
+        const url = userId ? `/users/${userId}` : '/users';
+
+        const response = await fetch(url, {
+          method,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) throw new Error(result.message || 'Erreur serveur');
+
+        alert(userId ? 'Utilisateur mis à jour avec succès' : 'Utilisateur créé avec succès');
+        closeModal('accountModal');
+        location.reload();
+      } catch (err) {
+        alert('Erreur : ' + err.message);
+      }
+    });
+
+   
+  });
+
+  async function deleteAccount(userId) {
+    if (!confirm("Êtes-vous sûr de vouloir supprimer ce compte ?")) return;
+    try {
+      const response = await fetch(`/users/${userId}`, { method: "DELETE", headers: { "Content-Type": "application/json" } });
+      if (!response.ok) throw new Error("Échec de la suppression");
+      alert("Compte supprimé !");
+    } catch (err) {
+      alert("Erreur : " + err.message);
+    }
+  }
+
+  async function promoteUser(userId) {
+    if (!confirm("Promouvoir cet utilisateur ?")) return;
+    try {
+      const response = await fetch(`/users/${userId}/promote`, { method: "PATCH", headers: { "Content-Type": "application/json" } });
+      if (!response.ok) throw new Error("Échec de la promotion");
+      alert("Utilisateur promu !");
+    } catch (err) {
+      alert("Erreur : " + err.message);
+    }
+  }
+
+  async function demoteUser(userId) {
+    if (!confirm("Rétrograder cet administrateur ?")) return;
+    try {
+      const response = await fetch(`/users/${userId}/demote`, { method: "PATCH", headers: { "Content-Type": "application/json" } });
+      if (!response.ok) throw new Error("Échec de la rétrogradation");
+      alert("Utilisateur rétrogradé !");
+    } catch (err) {
+      alert("Erreur : " + err.message);
+    }
+  }
+
+  window.onclick = function(event) {
+    if (event.target.classList.contains('modal')) event.target.classList.remove('show');
+  };
+</script>

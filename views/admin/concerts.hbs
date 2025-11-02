@@ -1,0 +1,127 @@
+<!-- Top Bar -->
+<header class="bg-white shadow-sm sticky top-0 z-10">
+    <div class="flex items-center justify-between px-4 md:px-8 py-4">
+        <button onclick="toggleSidebar()" class="md:hidden text-gray-700 hover:text-gray-900 mr-4">
+            <i class="fas fa-bars text-2xl"></i>
+        </button>
+        <div>
+            <h2 class="text-2xl font-bold text-gray-800">Concert Management</h2>
+            <p class="text-gray-600 text-sm">Manage and schedule concert events</p>
+        </div>
+        <a href="/admin/concerts/create" class="bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700 text-white px-6 py-3 rounded-lg font-medium shadow-lg">
+            <i class="fas fa-plus mr-2"></i>Create Concert
+        </a>
+    </div>
+</header>
+
+<!-- Content -->
+<div class="p-4 md:p-8">
+    <!-- Filters -->
+    <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+        <form action="/admin/concerts" method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="relative">
+                <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                <input type="text" name="search" placeholder="Search concerts..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-600">
+            </div>
+            <select name="genre" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-600">
+                <option value="">All Genres</option>
+                {{#each genres}}
+                <option value="{{this}}">{{this}}</option>
+                {{/each}}
+            </select>
+            <select name="status" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-600">
+                <option value="">All Status</option>
+                <option value="true">Active</option>
+                <option value="false">Inactive</option>
+            </select>
+            <button type="submit" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-medium">
+                <i class="fas fa-filter mr-2"></i>Apply
+            </button>
+        </form>
+    </div>
+
+    <!-- Concerts Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        {{#each concerts}}
+        <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition">
+            <div class="flex">
+                <div class="w-48 h-48 flex-shrink-0">
+                    <img src="{{this.image}}" alt="{{this.title}}" class="w-full h-full object-cover">
+                </div>
+                <div class="flex-1 p-6">
+                    <div class="flex items-start justify-between mb-3">
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-1">{{this.title}}</h3>
+                            <p class="text-sm text-gray-600">{{this.genre}}</p>
+                        </div>
+                        {{#if this.status}}
+                        <span class="px-3 py-1 text-xs font-semibold text-green-800 bg-green-100 rounded-full">Active</span>
+                        {{else}}
+                        <span class="px-3 py-1 text-xs font-semibold text-red-800 bg-red-100 rounded-full">Inactive</span>
+                        {{/if}}
+                    </div>
+                    <div class="space-y-2 mb-4">
+                        <div class="flex items-center text-sm text-gray-600">
+                            <i class="fas fa-calendar w-5 text-pink-600"></i>
+                            <span>{{formatDate this.date}} - {{this.hour}}</span>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-600">
+                            <i class="fas fa-map-marker-alt w-5 text-pink-600"></i>
+                            <span>{{this.location}}</span>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-600">
+                            <i class="fas fa-ticket-alt w-5 text-pink-600"></i>
+                            <span>{{this.availableSeats}} / {{this.totalSeats}} seats</span>
+                        </div>
+                        <div class="flex items-center text-sm font-semibold text-gray-800">
+                            <i class="fas fa-dollar-sign w-5 text-pink-600"></i>
+                            <span>${{this.price}}</span>
+                        </div>
+                    </div>
+                    <div class="flex space-x-2">
+                        <a href="/admin/concerts/edit/{{this._id}}" class="flex-1 bg-pink-100 text-pink-700 hover:bg-pink-200 px-3 py-2 rounded-lg text-sm font-medium transition text-center">
+                            <i class="fas fa-edit mr-1"></i>Edit
+                        </a>
+                        <button onclick="deleteConcert('{{this._id}}', '{{this.title}}')" class="flex-1 bg-red-100 text-red-700 hover:bg-red-200 px-3 py-2 rounded-lg text-sm font-medium transition">
+                            <i class="fas fa-trash mr-1"></i>Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{else}}
+        <div class="col-span-2 text-center py-12 bg-white rounded-xl">
+            <i class="fas fa-music text-6xl text-gray-300 mb-4"></i>
+            <p class="text-gray-600 text-lg">No concerts found</p>
+            <a href="/admin/concerts/create" class="inline-block mt-4 bg-pink-600 text-white px-6 py-2 rounded-lg">
+                Create your first concert
+            </a>
+        </div>
+        {{/each}}
+    </div>
+</div>
+
+<script>
+    function deleteConcert(id, title) {
+        if (confirm(`Are you sure you want to delete "${title}"? This action cannot be undone.`)) {
+            fetch(`/concerts/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert(`${title} has been deleted successfully!`);
+                    window.location.reload();
+                } else {
+                    alert('Error deleting concert');
+                }
+            })
+            .catch(error => {
+                alert('Error deleting concert');
+                console.error(error);
+            });
+        }
+    }
+</script>

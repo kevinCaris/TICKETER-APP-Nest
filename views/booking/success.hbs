@@ -1,0 +1,162 @@
+<div class="max-w-7xl mx-auto px-4 py-8">
+    <div class="flex items-center justify-between mb-8 max-w-4xl mx-auto">
+        <div class="flex items-center">
+            <div class="w-10 h-10 bg-indigo-600 text-white rounded-full flex items-center justify-center">✓</div>
+            <span class="ml-2 text-sm font-medium">Choisir le concert</span>
+        </div>
+        <div class="flex-1 h-0.5 bg-indigo-600 mx-4"></div>
+
+        <div class="flex items-center">
+            <div class="w-10 h-10 bg-indigo-600 text-white rounded-full flex items-center justify-center">✓</div>
+            <span class="ml-2 text-sm font-medium">Choisir les places</span>
+        </div>
+        <div class="flex-1 h-0.5 bg-indigo-600 mx-4"></div>
+
+        <div class="flex items-center">
+            <div class="w-10 h-10 bg-indigo-600 text-white rounded-full flex items-center justify-center">✓</div>
+            <span class="ml-2 text-sm font-medium">Paiement</span>
+        </div>
+        <div class="flex-1 h-0.5 bg-indigo-600 mx-4"></div>
+
+        <div class="flex items-center">
+            <div class="w-10 h-10 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold">
+                4</div>
+            <span class="ml-2 text-sm font-medium">Obtenir le billet</span>
+        </div>
+    </div>
+
+    <h2 class="text-3xl font-bold text-green-600 text-center mb-2">Paiement réussi !</h2>
+    <p class="text-center text-gray-600 mb-8">Vous avez reçu votre billet. Téléchargez-le ici.</p>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+    
+    <div class="lg:sticky lg:top-20 lg:self-start">
+        <div>
+            <h3 class="text-2xl font-bold mb-4">Félicitations !</h3>
+            <p class="text-gray-600 mb-6">
+                Vous avez acheté avec succès le billet pour :<br>
+                <span class="font-bold text-lg">{{ booking.concertId.title }}</span>
+            </p>
+
+            {{#each bookings}}
+            <div class="bg-white rounded-lg p-6 shadow-sm border mb-6">
+                <h4 class="font-bold text-lg mb-4">Détails de l'article</h4>
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Article :</span>
+                        <span class="font-xl">{{this.concertId.title}}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Quantité :</span>
+                        <p class="font-xl">{{this.quantity}} Billets</p>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Montant :</span>
+                        <p class="font-xl">{{this.amount}} €</p>
+                    </div>
+                </div>
+            </div>
+            {{/each}}
+
+            <div class="bg-white rounded-lg p-6 shadow-sm border mb-6">
+                <h4 class="font-bold text-lg mb-4">Détails du client</h4>
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Nom :</span>
+                        <span class="font-medium">{{user.username}}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Adresse email :</span>
+                        <span class="font-medium">{{user.email}}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg p-6 shadow-sm border">
+                <p class="font-medium mb-4">Merci d'avoir choisi d'acheter chez Ticketer !</p>
+                <p class="text-sm text-gray-600 mb-2">Vous avez débloqué des récompenses spéciales :</p>
+
+                <div class="space-y-2">
+                    <div class="bg-green-50 border border-green-200 rounded-lg p-3">
+                        <p class="text-green-700 text-sm font-medium">
+                            <i class="fas fa-tag mr-2"></i>
+                            20% de réduction sur votre prochain billet !
+                        </p>
+                    </div>
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                        <p class="text-blue-700 text-sm font-medium">
+                            <i class="fas fa-star mr-2"></i>
+                            Gagné 50 points pour votre achat !
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <div>
+        {{#each bookings}}
+        <div class="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl mb-8 overflow-hidden shadow-2xl">
+            <div class="p-6 text-white text-center">
+                <h3 class="text-xl font-bold mb-2">Téléchargez vos billets !</h3>
+                <p class="text-gray-300 mb-4">{{this.concertId.title}}</p>
+            </div>
+
+            <div class="relative">
+                <img src="{{this.concertId.image}}" alt="{{this.concertId.title}}" class="w-full h-64 object-cover">
+            </div>
+
+            <div class="bg-white bg-opacity-10 backdrop-blur-sm p-6 text-white">
+                <div class="flex justify-between mb-4">
+                    <span class="text-sm">{{this.quantity}} Billets</span>
+                </div>
+
+                <!-- QR Code Section -->
+                <div class="bg-white rounded-lg p-4 mb-4 flex flex-col items-center">
+                    <p class="text-gray-800 text-sm font-medium mb-3">Scannez pour voir les détails</p>
+                    <div id="qrcode-{{this._id}}" class="qrcode-container"></div>
+                    <p class="text-gray-600 text-xs mt-2">Booking ID: {{this._id}}</p>
+                </div>
+
+                <div class="border-t border-white border-opacity-30 pt-4 flex justify-center gap-3">
+                    <button onclick="openGmail()"
+                        class="flex-1 bg-indigo-600 py-3 rounded-lg font-medium hover:bg-indigo-700 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-envelope"></i>
+                        Voir mon ticket
+                    </button>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+</div>
+</div>
+
+<script>
+    function openGmail() {
+        window.location.href = 'https://mail.google.com/mail/u/0/';
+    }
+
+    
+    document.addEventListener('DOMContentLoaded', function () {
+        const bookings = {{{ json bookings }}};
+
+    bookings.forEach(booking => {
+        const concertId = booking.concertId._id;
+        const concertUrl = window.location.origin + '/concerts/' + concertId;
+        const qrcodeDiv = document.getElementById('qrcode-' + booking._id);
+
+        if (qrcodeDiv) {
+            new QRCode(qrcodeDiv, {
+                text: concertUrl,
+                width: 180,
+                height: 180,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        }
+    });
+    });
+</script>

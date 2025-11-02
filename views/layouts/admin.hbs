@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{title}} - TICKETER Admin</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .sidebar-link {
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-link:hover {
+            background: linear-gradient(90deg, #4f46e5 0%, #6366f1 100%);
+            transform: translateX(5px);
+        }
+
+        .sidebar-link.active {
+            background: linear-gradient(90deg, #4f46e5 0%, #6366f1 100%);
+            border-left: 4px solid #fbbf24;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .group-card {
+            transition: all 0.3s ease;
+        }
+
+        .group-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        /* Mobile sidebar overlay */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 40;
+        }
+
+        .sidebar-overlay.show {
+            display: block;
+        }
+
+        /* Sidebar responsive */
+        @media (max-width: 768px) {
+            aside {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            aside.show {
+                transform: translateX(0);
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Mobile Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+    <div class="flex h-screen overflow-hidden">
+        
+  <!-- Sidebar -->
+  {{> adminSidebar }}
+
+  <!-- Main Content -->
+  <main class="flex-1 overflow-y-auto md:ml-64">
+      {{{body}}}
+  </main>
+
+ <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById("sidebar");
+            const overlay = document.getElementById("sidebarOverlay");
+            sidebar.classList.toggle("show");
+            overlay.classList.toggle("show");
+        }
+
+        const sidebarLinks = document.querySelectorAll("#sidebar a");
+        sidebarLinks.forEach(link => {
+            link.addEventListener("click", () => {
+                if (window.innerWidth < 768) {
+                    toggleSidebar();
+                }
+            });
+        });
+    </script>
+
+  <script src="/js/admin.js"></script>
+</body>
+</html>
+

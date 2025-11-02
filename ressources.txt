@@ -1,0 +1,3 @@
+NestJS + Mongoose : https://docs.nestjs.com/techniques/mongodb
+Mongoose Schemas : https://mongoosejs.com/docs/guide.html
+Mongoose Timestamps : https://mongoosejs.com/docs/guide.html#timestamps

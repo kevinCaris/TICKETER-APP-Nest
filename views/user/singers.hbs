@@ -1,0 +1,168 @@
+<!-- Search Section -->
+<section class='bg-white py-6 border-b'>
+  <div class='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
+    <div class='flex justify-center'>
+      <div class='relative w-full max-w-md'>
+        <i
+          class='fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400'
+        ></i>
+        <input
+          type='text'
+          placeholder='Search by singer name'
+          class='w-full pl-12 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600'
+        />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Singers Title -->
+<section class='py-8 bg-white'>
+  <div class='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
+    <h1 class='text-3xl font-bold text-center mb-2'>{{title}}</h1>
+    <p class='text-center text-gray-600'>Find your favorite artists</p>
+  </div>
+</section>
+
+<!-- Singers Grid -->
+<section class='py-8 bg-gray-50'>
+  <div class='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
+    <div class='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6'>
+      {{#if data}}
+        {{#each data}}
+          <div
+            class='bg-white rounded-xl overflow-hidden shadow-md hover-scale cursor-pointer'
+          >
+            <div class='relative h-80'>
+              <img
+                src='{{this.image}}'
+                alt='{{this.name}}'
+                class='w-full h-full object-cover'
+              />
+            </div>
+            <div class='p-4 bg-indigo-50'>
+              <h3 class='font-bold text-center mb-1'>{{this.name}}</h3>
+              <p
+                class='text-gray-600 text-sm text-center mb-3'
+              >{{this.description}}</p>
+              <p
+                class='text-indigo-600 text-center text-sm font-semibold mb-2'
+              >{{this.genre}}</p>
+              {{! <button class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg text-sm font-medium transition duration-200">
+                  View Details
+                </button> }}
+              <button
+                onclick="toggleFavorite('{{this.id}}', this)"
+                data-group-id='{{this.id}}'
+                class='favorite-btn w-full py-2 rounded-lg text-sm font-medium transition duration-200 bg-gray-200 text-gray-700 hover:bg-gray-300'
+              >
+                <i class='far fa-heart'></i>
+                Add to Favorites
+              </button>
+            </div>
+          </div>
+        {{/each}}
+      {{else}}
+        <p class='col-span-full text-center text-gray-500'>No singers found.</p>
+      {{/if}}
+    </div>
+
+    <!-- Load More Button -->
+    <div class='text-center mt-10'>
+      <button
+        class='bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3 rounded-full font-medium transition duration-200'
+      >
+        View More Singers
+      </button>
+    </div>
+  </div>
+</section>
+
+
+<script>
+async function toggleFavorite(groupId, button) {
+  try {
+    const response = await fetch(`/favorites/${groupId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include'
+    });
+
+    if (response.ok) {
+      button.classList.remove('bg-gray-200', 'text-gray-700', 'hover:bg-gray-300');
+      button.classList.add('bg-red-500', 'text-white', 'hover:bg-red-600');
+      button.innerHTML = '<i class="fas fa-heart"></i> In Favorites';
+      button.onclick = () => removeFavorite(groupId, button);
+      alert('Added to favorites!');
+    } else if (response.status === 409) {
+      alert('This group is already in your favorites!');
+    } else if (response.status === 401) {
+      alert('Please login to add favorites');
+      window.location.href = '/login';
+    } else {
+      alert('Error adding to favorites');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    alert('Network error');
+  }
+}
+
+async function removeFavorite(groupId, button) {
+  try {
+    const response = await fetch(`/favorites/${groupId}`, {
+      method: 'DELETE',
+      credentials: 'include'
+    });
+
+    if (response.ok) {
+      button.classList.remove('bg-red-500', 'text-white', 'hover:bg-red-600');
+      button.classList.add('bg-gray-200', 'text-gray-700', 'hover:bg-gray-300');
+      button.innerHTML = '<i class="far fa-heart"></i> Add to Favorites';
+      button.onclick = () => toggleFavorite(groupId, button);
+      alert('Removed from favorites!');
+    } else if (response.status === 401) {
+      alert('Please login first');
+      window.location.href = '/login';
+    } else {
+      alert('Error removing from favorites');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    alert('Network error');
+  }
+}
+
+
+async function loadFavoritesState() {
+  try {
+    const response = await fetch('/favorites', {
+      credentials: 'include'
+    });
+    
+    if (response.ok) {
+      const favorites = await response.json();
+      
+      // Pour chaque favori, mettre à jour le bouton correspondant
+      favorites.forEach(fav => {
+        const groupId = fav.group._id || fav.group;
+        const button = document.querySelector(`button[data-group-id="${groupId}"]`);
+        
+        if (button) {
+          button.classList.remove('bg-gray-200', 'text-gray-700', 'hover:bg-gray-300');
+          button.classList.add('bg-red-500', 'text-white', 'hover:bg-red-600');
+          button.innerHTML = '<i class="fas fa-heart"></i> In Favorites';
+          button.onclick = () => removeFavorite(groupId, button);
+        }
+      });
+    }
+  } catch (error) {
+    console.log('Could not load favorites (user may not be logged in)');
+  }
+}
+
+// Charger l'état au chargement de la page
+document.addEventListener('DOMContentLoaded', loadFavoritesState);
+</script>

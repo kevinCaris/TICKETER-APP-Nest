@@ -1,0 +1,202 @@
+<!-- Main Content -->
+<section class='py-12'>
+  <div class='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
+    <h1 class='text-3xl font-bold mb-8'>Paramètres</h1>
+
+    <!-- Alert Messages -->
+    <div id="alertContainer"></div>
+
+    <div class='grid grid-cols-1 lg:grid-cols-4 gap-8'>
+      <!-- Sidebar -->
+      <div class='lg:col-span-1'>
+        <div class='bg-white rounded-xl shadow-md p-6'>
+          <!-- Profile -->
+          <div class='text-center mb-6'>
+            <div class='relative inline-block mb-4'>
+              <div class="w-24 h-24 bg-indigo-600 rounded-full flex items-center justify-center text-white text-3xl font-bold">
+                {{ user.username.[0] }}
+              </div>
+            </div>
+            <h3 class='font-bold'>{{ user.username }}</h3>
+            <p class='text-sm text-gray-500'>{{ user.email }}</p>
+          </div>
+
+          <!-- Menu -->
+          <nav class='space-y-2'>
+            <a href='/profile' class='flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-lg'>
+              <i class='fas fa-user'></i><span>Mon Compte</span>
+            </a>
+            <a href='/bookings' class='flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-lg'>
+              <i class='fas fa-receipt'></i><span>Mes Réservations</span>
+            </a>
+            <a href='/favorites' class='flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-lg'>
+              <i class='fas fa-heart'></i><span>Favoris</span>
+            </a>
+            <a href='/settings' class='flex items-center space-x-3 px-4 py-3 bg-indigo-50 text-indigo-600 rounded-lg font-medium'>
+              <i class='fas fa-cog'></i><span>Paramètres</span>
+            </a>
+          </nav>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class='lg:col-span-3'>
+        <div class='bg-white rounded-xl shadow-md p-8'>
+
+          <!-- FORMULAIRE INFOS PERSONNELLES -->
+          <h2 class='text-2xl font-bold mb-8'>Détails Personnels</h2>
+          <form id="personalForm" class='space-y-6'>
+            <div>
+              <label class='block text-gray-700 font-medium mb-2'>Nom Complet</label>
+              <input type="text" id="fullName" value="{{user.username}}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600">
+            </div>
+
+            <div>
+              <label class='block text-gray-700 font-medium mb-2'>Email</label>
+              <input type="email" id="email" value="{{user.email}}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600">
+            </div>
+
+            <div class='flex gap-4'>
+              <button type="submit" class='flex-1 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-semibold transition'>
+                Sauvegarder
+              </button>
+              <button type="button" onclick="resetPersonalForm()" class='flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition'>
+                ↻ Annuler
+              </button>
+            </div>
+          </form>
+
+          <!-- FORMULAIRE CHANGEMENT MOT DE PASSE -->
+          <div class='border-t pt-8 mt-8'>
+            <h3 class='text-2xl font-bold mb-8'>Modifier le mot de passe</h3>
+            <form id="passwordForm" class='space-y-6'>
+              <div>
+                <label class='block text-gray-700 font-medium mb-2'>Mot de Passe Actuel</label>
+                <input type="password" id="currentPassword" placeholder="Entrez votre mot de passe actuel" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600">
+              </div>
+
+              <div>
+                <label class='block text-gray-700 font-medium mb-2'>Nouveau Mot de Passe</label>
+                <input type="password" id="newPassword" placeholder="Nouveau mot de passe" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600">
+                <p class='text-sm text-gray-500 mt-1'>Min. 8 caractères</p>
+              </div>
+
+              <div>
+                <label class='block text-gray-700 font-medium mb-2'>Confirmer Mot de Passe</label>
+                <input type="password" id="confirmPassword" placeholder="Confirmez le mot de passe" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600">
+              </div>
+
+              <div class='flex gap-4 pt-6 border-t'>
+                <button type="submit" class='flex-1 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-semibold transition'>
+                  Sauvegarder
+                </button>
+                <button type="button" onclick="resetPasswordForm()" class='flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition'>
+                  ↻ Annuler
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- ZONE DANGEREUSE -->
+          <div class='mt-10 p-6 bg-red-50 border-2 border-red-200 rounded-lg'>
+            <h3 class='text-lg font-bold text-red-700 mb-3'>Zone Dangereuse</h3>
+            <button type="button" onclick="deleteAccount()" class='w-full px-6 py-3 border-2 border-red-600 text-red-600 hover:bg-red-50 rounded-lg font-semibold transition'>
+              Supprimer mon compte
+            </button>
+            <p class='text-sm text-red-600 mt-3'>Cette action est irréversible.</p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+function showAlert(message, type = 'success') {
+  const container = document.getElementById('alertContainer');
+  const bgColor = type === 'success' ? 'bg-green-100' : 'bg-red-100';
+  const textColor = type === 'success' ? 'text-green-700' : 'text-red-700';
+  const borderColor = type === 'success' ? 'border-green-400' : 'border-red-400';
+  container.innerHTML = `<div class="${bgColor} border-2 ${borderColor} ${textColor} px-4 py-3 rounded-lg mb-6">${message}</div>`;
+  setTimeout(() => container.innerHTML = '', 5000);
+}
+
+function resetPersonalForm() {
+  document.getElementById('fullName').value = '{{user.username}}';
+  document.getElementById('email').value = '{{user.email}}';
+}
+
+function resetPasswordForm() {
+  document.getElementById('passwordForm').reset();
+}
+
+document.getElementById('personalForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const username = document.getElementById('fullName').value.trim();
+  const email = document.getElementById('email').value.trim();
+  if (!username) return showAlert('Le nom ne peut pas être vide', 'error');
+  if (!email) return showAlert('L’email ne peut pas être vide', 'error');
+  try {
+    const res = await fetch('/users/update-profile', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ username, email })
+    });
+    const data = await res.json();
+    if (!data.success) throw new Error(data.message);
+    showAlert('Profil mis à jour avec succès !');
+  } catch (err) {
+    showAlert(err.message, 'error');
+  }
+});
+
+document.getElementById('passwordForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const currentPassword = document.getElementById('currentPassword').value;
+  const newPassword = document.getElementById('newPassword').value;
+  const confirmPassword = document.getElementById('confirmPassword').value;
+  if (!currentPassword) return showAlert('Le mot de passe actuel est requis', 'error');
+  if (!newPassword) return showAlert('Le nouveau mot de passe est requis', 'error');
+  if (newPassword.length < 8) return showAlert('Min. 8 caractères', 'error');
+  if (newPassword !== confirmPassword) return showAlert('Les mots de passe ne correspondent pas', 'error');
+  try {
+    const res = await fetch('/users/change-password', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ currentPassword, newPassword })
+    });
+    const data = await res.json();
+    if (!data.success) throw new Error(data.message);
+    showAlert('Mot de passe changé avec succès !');
+    resetPasswordForm();
+  } catch (err) {
+    showAlert(err.message, 'error');
+  }
+});
+
+async function deleteAccount() {
+  if (!confirm('Êtes-vous sûr ? Cette action est IRRÉVERSIBLE !')) return;
+  if (!confirm('Confirmez encore une fois la suppression.')) return;
+  try {
+    const res = await fetch('/users/delete-account', { method: 'DELETE', credentials: 'include' });
+    const data = await res.json();
+    if (!data.success) throw new Error(data.message);
+    showAlert('Compte supprimé. Redirection...');
+    await logout();
+  } catch (err) {
+    showAlert(err.message, 'error');
+  }
+}
+
+async function logout() {
+  try {
+    const response = await fetch('/logout', { method: 'POST', credentials: 'include' });
+    if (!response.ok) throw new Error();
+    window.location.href = '/login';
+  } catch {
+    alert('Erreur lors de la déconnexion.');
+  }
+}
+</script>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+    <link rel="stylesheet" href="/css/style.css">
+     <script src="https://cdn.tailwindcss.com"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .bg-navy {
+            background-color: #1a1f3a;
+        }
+
+        .bg-dark-navy {
+            background-color: #0f1324;
+        }
+
+        .text-primary {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+            color: #4f46e5;
+        }
+
+        .bg-primary {
+            background-color: #4f46e5;
+        }
+
+        .hover-scale {
+            transition: transform 0.3s ease;
+        }
+
+        .hover-scale:hover {
+            transform: scale(1.05);
+        }
+
+        .singer-card {
+            background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 100%);
+        }
+
+        .concert-overlay {
+            background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.9) 100%);
+        }
+    </style>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+</head>
+<body>
+    
+    {{> header}}
+    {{{body}}}
+    {{> footer}} 
+<script>
+  async function checkAuthGlobal() {
+    const protectedPages = ['/dashboard', 'user/profile'];
+    if (protectedPages.includes(window.location.pathname)) {
+      try {
+        const response = await fetch('/auth/check', {
+          method: 'GET',
+          credentials: 'include',
+        });
+
+        if (!response.ok) throw new Error();
+        const data = await response.json();
+        if (!data.isAuthenticated) throw new Error();
+      } catch {
+        window.location.href = '/login';
+      }
+    }
+  }
+
+  window.addEventListener('DOMContentLoaded', checkAuthGlobal);
+</script>
+
+</body>
+</html>

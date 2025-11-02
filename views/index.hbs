@@ -1,0 +1,367 @@
+<!-- Section Héros -->
+<section class="bg-navy text-white py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 class="text-4xl md:text-5xl font-bold text-center mb-3">
+            Réservez les billets de vos artistes préférés !
+        </h1>
+        <p class="text-center text-gray-300 mb-8">
+            De la musique en live sans interruption, où que vous soyez.
+        </p>
+
+        <!-- Filtres de recherche -->
+        <div class="flex flex-wrap justify-center gap-4 mb-8">
+            <div class="relative flex-1 min-w-[200px] max-w-xs">
+                <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                <input type="text" placeholder="Chercher par artiste"
+                    class="w-full pl-12 pr-4 py-3 rounded-lg text-gray-900">
+            </div>
+
+            <div class="relative flex-1 min-w-[200px] max-w-xs">
+                <i class="fas fa-calendar absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                <select class="w-full pl-12 pr-4 py-3 rounded-lg text-gray-900 appearance-none">
+                    <option>Chercher par date</option>
+                </select>
+            </div>
+
+            <div class="relative flex-1 min-w-[200px] max-w-xs">
+                <i class="fas fa-map-marker-alt absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                <select class="w-full pl-12 pr-4 py-3 rounded-lg text-gray-900 appearance-none">
+                    <option>Chercher par lieu</option>
+                </select>
+            </div>
+
+           <button onclick="window.location.href='/concerts/view'" class="bg-indigo-600 hover:bg-indigo-700 text-white hover:bg-gray-100 text-indigo-600 px-8 py-3 rounded-lg font-medium">
+                Voir tous les billets
+            </button>
+        </div>
+    </div>
+</section>
+<!-- Artistes en vedette -->
+<section class="py-12 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl font-bold text-center mb-8">Artistes en vedette</h2>
+        <div id="groups-container" class="flex overflow-x-auto space-x-6 pb-4">
+            <!-- Chargé dynamiquement -->
+        </div>
+    </div>
+</section>
+
+<!-- Nos avantages -->
+<section class="py-16 bg-gray-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl font-bold text-center mb-3">Nos avantages</h2>
+        <p class="text-center text-gray-600 mb-12">Nous sommes là pour vous offrir les meilleurs services</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div class="text-center">
+                <div class="flex justify-center mb-4">
+                    <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-credit-card text-3xl text-indigo-600"></i>
+                    </div>
+                </div>
+                <h3 class="text-lg font-semibold mb-2">Paiement en plusieurs fois</h3>
+                <p class="text-gray-600 text-sm">Payez vos billets en plusieurs fois pour plus de flexibilité</p>
+            </div>
+
+            <div class="text-center">
+                <div class="flex justify-center mb-4">
+                    <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-globe text-3xl text-indigo-600"></i>
+                    </div>
+                </div>
+                <h3 class="text-lg font-semibold mb-2">Réservation en ligne</h3>
+                <p class="text-gray-600 text-sm">Réservez vos billets à tout moment, où que vous soyez</p>
+            </div>
+
+            <div class="text-center">
+                <div class="flex justify-center mb-4">
+                    <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-sync-alt text-3xl text-indigo-600"></i>
+                    </div>
+                </div>
+                <h3 class="text-lg font-semibold mb-2">Billet remboursable</h3>
+                <p class="text-gray-600 text-sm">Obtenez un remboursement complet selon notre politique</p>
+            </div>
+
+            <div class="text-center">
+                <div class="flex justify-center mb-4">
+                    <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-ticket-alt text-3xl text-indigo-600"></i>
+                    </div>
+                </div>
+                <h3 class="text-lg font-semibold mb-2">Les billets les moins chers !</h3>
+                <p class="text-gray-600 text-sm">Les meilleurs prix garantis pour tous vos concerts préférés</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Concerts en vedette -->
+<section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl font-bold text-center mb-2">Le temps file !</h2>
+        <p class="text-center text-gray-600 mb-8">Découvrez les concerts à venir</p>
+        <div id="concerts-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+            <!-- Chargé dynamiquement -->
+        </div>
+    </div>
+</section>
+
+<!-- Étapes d'achat -->
+<section class="py-16 bg-gray-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl font-bold text-center mb-3">4 Étapes Simples Pour Prendre un Ticket</h2>
+        <p class="text-center text-gray-600 mb-12">Réservez votre place simplement!</p>
+
+        <div class="flex justify-center mb-8">
+            <a href="/concerts/view" class="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3 rounded-full font-medium">
+                Réserver Maintenant
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div class="text-center relative">
+                <div class="flex justify-center mb-4">
+                    <div class="w-32 h-32 bg-blue-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-search text-4xl text-indigo-600"></i>
+                    </div>
+                </div>
+                <div class="absolute top-16 left-1/2 transform -translate-x-1/2 w-8 h-8 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold">
+                    1
+                </div>
+                <h3 class="text-lg font-semibold mb-2 mt-4">Trouvez l'événement</h3>
+                <p class="text-gray-600 text-sm">Parcourez notre vaste liste de concerts et d'événements</p>
+            </div>
+
+            <div class="text-center relative">
+                <div class="flex justify-center mb-4">
+                    <div class="w-32 h-32 bg-blue-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-calendar-check text-4xl text-indigo-600"></i>
+                    </div>
+                </div>
+                <div class="absolute top-16 left-1/2 transform -translate-x-1/2 w-8 h-8 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold">
+                    2
+                </div>
+                <h3 class="text-lg font-semibold mb-2 mt-4">Choisissez une date et une heure</h3>
+                <p class="text-gray-600 text-sm">Sélectionnez la date qui vous convient et choisissez votre place idéale</p>
+            </div>
+
+            <div class="text-center relative">
+                <div class="flex justify-center mb-4">
+                    <div class="w-32 h-32 bg-blue-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-credit-card text-4xl text-indigo-600"></i>
+                    </div>
+                </div>
+                <div class="absolute top-16 left-1/2 transform -translate-x-1/2 w-8 h-8 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold">
+                    3
+                </div>
+                <h3 class="text-lg font-semibold mb-2 mt-4">Effectuer le paiement</h3>
+                <p class="text-gray-600 text-sm">Finalisez votre réservation grâce à des options de paiement sécurisées.</p>
+            </div>
+
+            <div class="text-center relative">
+                <div class="flex justify-center mb-4">
+                    <div class="w-32 h-32 bg-blue-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-ticket-alt text-4xl text-indigo-600"></i>
+                    </div>
+                </div>
+                <div class="absolute top-16 left-1/2 transform -translate-x-1/2 w-8 h-8 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold">
+                    4
+                </div>
+                <h3 class="text-lg font-semibold mb-2 mt-4">Obtenez votre ticket</h3>
+                <p class="text-gray-600 text-sm">Recevez votre billet électronique instantanément par courriel.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Témoignages -->
+<section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl font-bold text-center mb-2">Ce que les gens pensent de nous</h2>
+        <p class="text-center text-gray-600 mb-12">Nos utilisateurs sont satisfaits de nos services !</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="bg-gray-50 p-6 rounded-xl shadow-md">
+                <div class="flex items-center mb-4">
+                    <i class="fas fa-quote-left text-3xl text-indigo-600"></i>
+                </div>
+                <p class="text-gray-700 mb-4">"Plateforme de réservation de concerts exceptionnelle ! Super facile à utiliser et excellent service client. Je recommande vivement !"</p>
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-indigo-400 rounded-full mr-3 flex items-center justify-center text-white font-bold">SJ</div>
+                    <div>
+                        <h4 class="font-semibold">Sarah Johnson</h4>
+                        <p class="text-gray-500 text-sm">Concert Enthousiaste</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 p-6 rounded-xl shadow-md">
+                <div class="flex items-center mb-4">
+                    <i class="fas fa-quote-left text-3xl text-indigo-600"></i>
+                </div>
+                <p class="text-gray-700 mb-4">"J'utilise Ticketer depuis des années et je n'ai jamais été déçu. Meilleurs prix garantis ! Et un service toujours impeccable !"</p>
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-purple-400 rounded-full mr-3 flex items-center justify-center text-white font-bold">MC</div>
+                    <div>
+                        <h4 class="font-semibold">Michael Chen</h4>
+                        <p class="text-gray-500 text-sm">Amoureux de Pop</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 p-6 rounded-xl shadow-md">
+                <div class="flex items-center mb-4">
+                    <i class="fas fa-quote-left text-3xl text-indigo-600"></i>
+                </div>
+                <p class="text-gray-700 mb-4">"Le processus de remboursement s'est déroulé sans accroc lorsque j'ai dû annuler. Un service client exceptionnel ! Une expérience sans tracas !"</p>
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-pink-400 rounded-full mr-3 flex items-center justify-center text-white font-bold">ER</div>
+                    <div>
+                        <h4 class="font-semibold">Emily Rodriguez</h4>
+                        <p class="text-gray-500 text-sm">Cliente régulière</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-12">
+            <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3 rounded-full font-medium">
+                Donnez votre opinion
+            </button>
+        </div>
+    </div>
+</section>
+
+<script>
+  // Données fictives
+  const donnesFictives = {
+    concerts: [
+      {
+        id: '1',
+        title: 'Taylor Swift - The Eras Tour',
+        image: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=500&h=600&fit=crop',
+        date: '15 Dec 2025',
+        location: 'Paris, France',
+        price: 120
+      },
+      {
+        id: '2',
+        title: 'Ed Sheeran - Mathematics',
+        image: 'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=500&h=600&fit=crop',
+        date: '20 Dec 2025',
+        location: 'London, UK',
+        price: 95
+      },
+      {
+        id: '3',
+        title: 'The Weeknd - After Hours',
+        image: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=500&h=600&fit=crop',
+        date: '25 Dec 2025',
+        location: 'New York, USA',
+        price: 150
+      },
+      {
+        id: '4',
+        title: 'Billie Eilish - Happier',
+        image: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=500&h=600&fit=crop',
+        date: '28 Dec 2025',
+        location: 'Los Angeles, USA',
+        price: 110
+      },
+      {
+        id: '5',
+        title: 'Coldplay - Music Live',
+        image: 'https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=500&h=600&fit=crop',
+        date: '02 Jan 2026',
+        location: 'Berlin, Germany',
+        price: 100
+      }
+    ],
+    groups: [
+      {
+        id: '1',
+        name: 'Taylor Swift',
+        genre: 'Pop',
+        image: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=300&h=300&fit=crop'
+      },
+      {
+        id: '2',
+        name: 'Ed Sheeran',
+        genre: 'Pop/Rock',
+        image: 'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=300&h=300&fit=crop'
+      },
+      {
+        id: '3',
+        name: 'The Weeknd',
+        genre: 'R&B/Pop',
+        image: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=300&h=300&fit=crop'
+      },
+      {
+        id: '4',
+        name: 'Billie Eilish',
+        genre: 'Alternative',
+        image: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&h=300&fit=crop'
+      },
+      {
+        id: '5',
+        name: 'Coldplay',
+        genre: 'Rock',
+        image: 'https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=300&h=300&fit=crop'
+      },
+      {
+        id: '6',
+        name: 'Ariana Grande',
+        genre: 'Pop',
+        image: 'https://images.unsplash.com/photo-1511379938547-c1f69b13d835?w=300&h=300&fit=crop'
+      }
+    ]
+  };
+
+  function afficherDonnees() {
+    // Afficher les concerts
+    const htmlConcerts = donnesFictives.concerts.map(c => `
+      <div class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow cursor-pointer">
+        <div class="relative h-64">
+          <img src="${c.image}" alt="${c.title}" class="w-full h-full object-cover">
+        </div>
+        <div class="p-4">
+          <div class="flex justify-between items-start mb-2 gap-2">
+            <span class="bg-red-500 text-white px-3 py-1 rounded-full text-xs font-semibold flex-shrink-0">${c.date}</span>
+            <h3 class="font-semibold text-sm line-clamp-2">${c.title}</h3>
+          </div>
+          <p class="text-gray-600 text-sm mb-3">${c.location}</p>
+          <p class="text-indigo-600 font-bold mb-3">$${c.price}</p>
+          <a href="/concerts/view" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg font-medium text-center block">
+            Réserver
+          </a>
+        </div>
+      </div>
+    `).join('');
+    
+    document.getElementById('concerts-container').innerHTML = htmlConcerts;
+
+    // Afficher les groupes
+    const htmlGroupes = donnesFictives.groups.map(g => `
+      <div class="flex-shrink-0 w-40">
+        <div class="relative rounded-xl overflow-hidden group cursor-pointer hover:shadow-lg transition-shadow">
+          <img src="${g.image}" alt="${g.name}" class="w-full h-48 object-cover">
+          <div class="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black to-transparent">
+            <h3 class="text-white font-semibold text-sm">${g.name}</h3>
+            <p class="text-gray-300 text-xs">${g.genre}</p>
+            <a href="/groups/singles" class="mt-2 w-full bg-white text-indigo-600 py-1 rounded text-xs font-medium hover:bg-gray-200 block text-center">
+              Voir
+            </a>
+          </div>
+        </div>
+      </div>
+    `).join('');
+    
+    document.getElementById('groups-container').innerHTML = htmlGroupes;
+  }
+
+  document.addEventListener('DOMContentLoaded', afficherDonnees);
+</script>
+
+</body>
+</html>
