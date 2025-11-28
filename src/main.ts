@@ -12,11 +12,17 @@ async function bootstrap() {
 
   app.use(cookieParser());
 
+  // ===== CORS FIXÉ =====
+  const corsOrigin = process.env.CORS_ORIGIN || 'http://localhost:3000';
+
   app.enableCors({
-    origin: 'http://localhost:3000',
+    origin: corsOrigin.split(','), // Support multiple origins
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   });
 
+  // ===== HANDLEBARS =====
   const hbsEngine = create({
     extname: '.hbs',
     defaultLayout: 'main',
@@ -62,17 +68,34 @@ async function bootstrap() {
       },
     },
   });
+
   app.useGlobalPipes(new ValidationPipe());
-
   app.useStaticAssets(join(__dirname, '..', 'public'));
-
   app.engine('hbs', hbsEngine.engine);
   app.setViewEngine('hbs');
   app.setBaseViewsDir(join(__dirname, '..', 'views'));
 
-  const mailService = app.get(MailService);
-  const isConnected = await mailService.testConnection();
+  // ===== MAIL SERVICE =====
+  try {
+    const mailService = app.get(MailService);
+    const isConnected = await mailService.testConnection();
+    console.log('Mail service connected:', isConnected);
+  } catch (error) {
+    console.warn('⚠️ Mail service not available:');
+  }
 
-  await app.listen(process.env.PORT ?? 3000);
+  // ===== PORT FIXÉ POUR RENDER =====
+  const port = parseInt(process.env.PORT || '3000', 10);
+  const host = process.env.HOST || '0.0.0.0'; // ← IMPORTANT pour Render
+
+  await app.listen(port, host);
+
+  console.log(`Application listening on ${host}:${port}`);
+  console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`CORS origin: ${corsOrigin}`);
 }
-bootstrap();
+
+bootstrap().catch((error) => {
+  console.error('Failed to start application:', error);
+  process.exit(1);
+});
