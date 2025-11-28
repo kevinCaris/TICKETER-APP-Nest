@@ -144,7 +144,7 @@
 
     bookings.forEach(booking => {
         const concertId = booking.concertId._id;
-        const concertUrl = window.location.origin + '/concerts/' + concertId;
+        const concertUrl = window.location.origin + 'concerts/view/' + concertId;
         const qrcodeDiv = document.getElementById('qrcode-' + booking._id);
 
         if (qrcodeDiv) {

@@ -255,7 +255,7 @@ export class MailService {
       <p><strong>Date:</strong> ${new Date(concert.date).toLocaleDateString()}</p>
       <p><strong>Lieu:</strong> ${concert.location}</p>
       <p><strong>Pri:</strong> $${concert.price}</p>
-      <p><a href="http://localhost:3000/concerts/view/${concert._id}" style="background-color: #4f46e5; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">View Details</a></p>
+      <p><a href="https://military-rory-epitech-c96fb691.koyeb.app/concerts/view/${concert._id}" style="background-color: #4f46e5; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">View Details</a></p>
     `,
     };
 
