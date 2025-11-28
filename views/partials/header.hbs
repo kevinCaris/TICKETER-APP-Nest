@@ -130,3 +130,120 @@
     </div>
   </div>
 </header>
+
+<script>
+class UserSessionManager {
+  constructor() {
+    this.user = null;
+  }
+
+  async init() {
+    try {
+      const response = await fetch('/auth/check', {
+        credentials: 'include'
+      });
+
+      if (!response.ok) throw new Error('Non authentifié');
+
+      const data = await response.json();
+      if (!data.success || !data.user) throw new Error('Non authentifié');
+
+      this.user = data.user;
+      this.renderConnected();
+    } catch {
+      this.renderNotConnected();
+    }
+    
+    // Initialisation des écouteurs pour le menu mobile après le rendu
+    this.setupMobileMenuListener();
+  }
+
+  renderNotConnected() {
+    document.getElementById('loginBtn').classList.remove('hidden');
+    document.getElementById('userConnected').classList.add('hidden');
+  }
+
+  renderConnected() {
+    document.getElementById('loginBtn').classList.add('hidden');
+    document.getElementById('userConnected').classList.remove('hidden');
+
+    document.getElementById('userAvatar').textContent = this.getInitials();
+    document.getElementById('userName').textContent = this.escapeHtml(this.user.username);
+    document.getElementById('userEmail').textContent = this.escapeHtml(this.user.email);
+
+    if (this.user.isAdmin) {
+      document.getElementById('adminLink').classList.remove('hidden');
+    }
+
+    this.setupProfileMenuListeners();
+  }
+
+  // Ancien setupMenuListeners renommé pour plus de clarté
+  setupProfileMenuListeners() {
+    const menuBtn = document.getElementById('menuBtn');
+    const profileMenu = document.getElementById('profileMenu');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    if (!menuBtn || !profileMenu || !logoutBtn) return;
+
+    menuBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      profileMenu.classList.toggle('hidden');
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!menuBtn.contains(e.target) && !profileMenu.contains(e.target)) {
+        profileMenu.classList.add('hidden');
+      }
+    });
+
+    logoutBtn.addEventListener('click', () => this.logout());
+  }
+  
+  // NOUVELLE MÉTHODE POUR LE MENU MOBILE
+  setupMobileMenuListener() {
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+
+    if (!mobileMenuBtn || !mobileMenu) return;
+
+    mobileMenuBtn.addEventListener('click', () => {
+      // Toggle l'affichage du menu mobile
+      mobileMenu.classList.toggle('hidden');
+    });
+  }
+
+  async logout() {
+    try {
+      const response = await fetch('/logout', {
+        method: 'POST',
+        credentials: 'include',
+      });
+
+      if (!response.ok) throw new Error();
+
+      this.user = null;
+      this.renderNotConnected();
+      window.location.href = '/login';
+    } catch {
+      alert('Erreur lors de la déconnexion.');
+    }
+  }
+
+  getInitials() {
+    if (!this.user?.username) return 'U';
+    // Assure d'utiliser les 2 premiers caractères des 2 premiers mots si le nom est long
+    return this.user.username.split(' ').map(p => p[0]).join('').toUpperCase().substring(0, 2);
+  }
+
+  escapeHtml(text) {
+    const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+    return text.replace(/[&<>"']/g, m => map[m]);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const userSessionManager = new UserSessionManager();
+  userSessionManager.init();
+});
+</script>
